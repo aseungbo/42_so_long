@@ -17,7 +17,7 @@
 # define ROWS 11
 # define COLS 15
 # define WIDTH COLS * TILE_SIZE
-# define HEIGHT ROWS * TILE_SIZE
+# define HEIGHT (ROWS * TILE_SIZE)
 
 # define TO_COORD(X, Y) ((int)floor(Y) * WIDTH + (int)floor(X))
 
@@ -43,45 +43,45 @@ typedef struct	s_game
 }				t_game;
 
 //Draw the line by DDA algorithm
-void	draw_line(t_game *game, double x1, double y1, double x2, double y2)
-{
-	double	deltaX;
-	double	deltaY;
-	double	step;
+// void	draw_line(t_game *game, double x1, double y1, double x2, double y2)
+// {
+// 	double	deltaX;
+// 	double	deltaY;
+// 	double	step;
 
-	deltaX = x2 - x1;
-	deltaY = y2 - y1;
-	step = (fabs(deltaX) > fabs(deltaY)) ? fabs(deltaX) : fabs(deltaY);
-	deltaX /= step;
-	deltaY /= step;
-	while (fabs(x2 - x1) > 0.01 || fabs(y2 - y1) > 0.01)
-	{
-		game->img.data[TO_COORD(x1, y1)] = 0xb3b3b3;
-		x1 += deltaX;
-		y1 += deltaY;
-	}
-}
+// 	deltaX = x2 - x1;
+// 	deltaY = y2 - y1;
+// 	step = (fabs(deltaX) > fabs(deltaY)) ? fabs(deltaX) : fabs(deltaY);
+// 	deltaX /= step;
+// 	deltaY /= step;
+// 	while (fabs(x2 - x1) > 0.01 || fabs(y2 - y1) > 0.01)
+// 	{
+// 		game->img.data[TO_COORD(x1, y1)] = 0xb3b3b3;
+// 		x1 += deltaX;
+// 		y1 += deltaY;
+// 	}
+// }
 
-void 	draw_lines(t_game *game)
-{
-	int		i;
-	int		j;
+// void 	draw_lines(t_game *game)
+// {
+// 	int		i;
+// 	int		j;
 
-	i = 0;
-	while (i < COLS)
-	{
-		draw_line(game, i * TILE_SIZE, 0, i * TILE_SIZE, HEIGHT);
-		i++;
-	}
-	draw_line(game, COLS * TILE_SIZE - 1, 0, COLS * TILE_SIZE - 1, HEIGHT);
-	j = 0;
-	while (j < ROWS)
-	{
-		draw_line(game, 0, j * TILE_SIZE, WIDTH, j * TILE_SIZE);
-		j++;
-	}
-	draw_line(game, 0, ROWS * TILE_SIZE - 1, WIDTH, ROWS * TILE_SIZE - 1);
-}
+// 	i = 0;
+// 	while (i < COLS)
+// 	{
+// 		draw_line(game, i * TILE_SIZE, 0, i * TILE_SIZE, HEIGHT);
+// 		i++;
+// 	}
+// 	draw_line(game, COLS * TILE_SIZE - 1, 0, COLS * TILE_SIZE - 1, HEIGHT);
+// 	j = 0;
+// 	while (j < ROWS)
+// 	{
+// 		draw_line(game, 0, j * TILE_SIZE, WIDTH, j * TILE_SIZE);
+// 		j++;
+// 	}
+// 	draw_line(game, 0, ROWS * TILE_SIZE - 1, WIDTH, ROWS * TILE_SIZE - 1);
+// }
 
 void	draw_rectangle(t_game *game, int x, int y, int color)
 {
@@ -128,8 +128,10 @@ void	draw_rectangles(t_game *game)
                 draw_rectangle(game, j, i, 0x0000FF);
             // player
             else if (game->rot_x == i && game->rot_y == j)
+                draw_rectangle(game, j, i, 0x7FFF00);
+            // Bonus: enemy patrols
+            else if (game->map[i][j] == 75)
                 draw_rectangle(game, j, i, 0xFF0000);
-            
 			j++;
 		}
 		i++;
@@ -195,8 +197,8 @@ void	game_init(t_game *game)
 	{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1},
 	{1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1},
 	{1, 0, 0, 80, 0, 0, 0, 0, 0, 0, 1, 69, 1, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+	{1, 0, 0, 0, 0, 0, 0, 75, 1, 1, 1, 1, 1, 0, 1},
+	{1, 75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 	{1, 0, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
 	{1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1},
 	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -219,7 +221,7 @@ void	img_init(t_game *game)
 	game->img.data = (int *)mlx_get_data_addr(game->img.img, &game->img.bpp, &game->img.size_l, &game->img.endian);
 }
 
-void    clear_condition(t_game *game)
+void    play_condition(t_game *game)
 {
     static int cnt;
 
@@ -229,14 +231,17 @@ void    clear_condition(t_game *game)
         cnt++;
         printf("획득한 C의 개수: %d \n", cnt);
     }
-    if (cnt == 2 && game->map[game->rot_x][game->rot_y] == 69)
+    // Bonus : enemy patrols
+    else if (game->map[game->rot_x][game->rot_y] == 75)
+        exit(0);
+    else if (cnt == 2 && game->map[game->rot_x][game->rot_y] == 69)
         exit(0);
 }
 int		main_loop(t_game *game)
 {
-    clear_condition(game);
+    play_condition(game);
 	draw_rectangles(game);
-	draw_lines(game);
+	// draw_lines(game);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 	return (0);
 }
