@@ -18,8 +18,8 @@
 # define KEY_D			2
 
 // IMG
-# define IMG_WIDTH 500
-# define IMG_HEIGHT 500
+# define IMG_WIDTH 800
+# define IMG_HEIGHT 600
 //Since key_press() can recieve only one argument, all the argument shold be gathered in one structure
 //x,y and str are meaningless variables.
 typedef struct s_param{
@@ -89,28 +89,34 @@ int main()
     t_param param;
     t_img   img;
     
-    width = 600;
-    height = 600;
+    width = 500;
+    height = 500;
     param_init(&param);
+
+    // Window make
     mlx_ptr = mlx_init();	//mlx 할당 실패할 경우 NULL반환
     win_ptr = mlx_new_window(mlx_ptr, width, height, "./so_long"); 
     				// 할당된 mlx에 너비. 높이를 갖는 윈도우 창 생성.
+
+    // IMG make
     img.img_ptr = mlx_new_image(mlx_ptr, IMG_WIDTH, IMG_HEIGHT);
 	img.data = (int *)mlx_get_data_addr(img.img_ptr, &img.bpp, &img.size_l, &img.endian);
 
+    // dot masking
     count_h = -1;
 	while (++count_h < IMG_HEIGHT)
 	{
 		count_w = -1;
 		while (++count_w < IMG_WIDTH)
 		{
-			if (count_w % 2)
+			if (count_w % 9)
 				img.data[count_h * IMG_WIDTH + count_w] = 0xFFFFFF;
 			else
-				img.data[count_h * IMG_WIDTH + count_w] = 0xFF0000;
+				img.data[count_h * IMG_WIDTH + count_w] = 0xFFFFFF;
 		}
 	}
     mlx_put_image_to_window(mlx_ptr, win_ptr, img.img_ptr, 0, 0);
+    // Key hook
     mlx_hook(win_ptr, X_EVENT_KEY_PRESS, 0, &key_press, &param);
     mlx_loop(mlx_ptr);
 }
