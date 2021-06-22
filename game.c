@@ -17,13 +17,14 @@
 # define ROWS 11
 # define COLS 15
 # define WIDTH COLS * TILE_SIZE
-# define HEIGHT (ROWS * TILE_SIZE)
+# define HEIGHT ROWS * TILE_SIZE
 
 # define TO_COORD(X, Y) ((int)floor(Y) * WIDTH + (int)floor(X))
 
 typedef struct	s_img
 {
 	void	*img;
+    void    *img_file;
 	int		*data;
 
 	int		size_l;
@@ -87,7 +88,11 @@ void	draw_rectangle(t_game *game, int x, int y, int color)
 {
 	int i;
 	int j;
+    int	img_width;
+	int img_height;
 
+    // game->img.img = mlx_xpm_file_to_image(game->mlx, "./wall_e.xpm", &img_width, &img_height);
+    // game->img.data = (int *)mlx_get_data_addr(game->img.img, &game->img.bpp, &game->img.size_l, &game->img.endian);
 	x *= TILE_SIZE;
 	y *= TILE_SIZE;
 	i = 0;
@@ -96,17 +101,20 @@ void	draw_rectangle(t_game *game, int x, int y, int color)
 		j = 0;
 		while (j < TILE_SIZE)
 		{
-			game->img.data[(y  + i) * WIDTH + x + j] = color;
+			game->img.data[(y + i) * WIDTH + x + j] = color;
 			j++;
 		}
 		i++;
 	}
+    // mlx_put_image_to_window(game->mlx, game->win, game->img.img_file, x, y);
 }
 
 void	draw_rectangles(t_game *game)
 {
 	int		i;
 	int		j;
+    int		img_width;
+	int 	img_height;
 
 	i = 0;
 	while (i < ROWS)
@@ -117,19 +125,22 @@ void	draw_rectangles(t_game *game)
             // free space
             draw_rectangle(game, j, i, 0x000000);
 
-            // wall
+            // wall, Add img
 			if (game->map[i][j] == 1)
+            {
 				draw_rectangle(game, j, i, 0xFFFFFF);
-            // C
+                // draw_img(game, j, i);
+            }
+            // C, instead of img
             else if (game->map[i][j] == 69)
                 draw_rectangle(game, j, i, 0xFFFF00);
-            // E
+            // E, instead of img
             else if (game->map[i][j] == 67)
                 draw_rectangle(game, j, i, 0x0000FF);
-            // player
+            // player, instead of img
             else if (game->rot_x == i && game->rot_y == j)
                 draw_rectangle(game, j, i, 0x7FFF00);
-            // Bonus: enemy patrols
+            // Bonus: enemy patrols, instead of img
             else if (game->map[i][j] == 75)
                 draw_rectangle(game, j, i, 0xFF0000);
 			j++;
