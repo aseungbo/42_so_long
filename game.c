@@ -140,13 +140,13 @@ int		deal_key(int key_code, t_game *game)
 {
     static int cnt;
 
-	if (key_code == KEY_W)//Action when W key pressed
+	if (key_code == KEY_W) //Action when W key pressed
     {
         if (game->map[game->rot_x - 1][game->rot_y] != 1)
         {
 		    game->rot_x--;
             cnt++;
-            printf("y: %d\n", game->rot_y);
+            // printf("y: %d\n", game->rot_y);
         }
     }
     else if (key_code == KEY_S) //Action when S key pressed
@@ -155,7 +155,7 @@ int		deal_key(int key_code, t_game *game)
 		{
             game->rot_x++;
             cnt++;
-            printf("y: %d\n", game->rot_y);
+            // printf("y: %d\n", game->rot_y);
         }
     }
     else if (key_code == KEY_A) //Action when A key pressed
@@ -164,7 +164,7 @@ int		deal_key(int key_code, t_game *game)
         {
             game->rot_y--;
             cnt++;
-            printf("x: %d\n", game->rot_x);
+            // printf("x: %d\n", game->rot_x);
         }
     }
     else if (key_code == KEY_D) //Action when D key pressed
@@ -173,12 +173,12 @@ int		deal_key(int key_code, t_game *game)
 		{
             game->rot_y++;
             cnt++;
-            printf("x: %d\n", game->rot_x);
+            // printf("x: %d\n", game->rot_x);
         }
     }
 	else if (key_code == KEY_ESC)
 		exit(0);
-    printf("cnt cost: %d :(\n", cnt);
+    printf("the current number of movements: %d\n", cnt);
     return (0);
 }
 
@@ -204,7 +204,6 @@ void	game_init(t_game *game)
 	};
     game->rot_x = 4;
     game->rot_y = 3;
-    printf("map rot: %d \n", map[game->rot_x][game->rot_y]);
 	memcpy(game->map, map, sizeof(int) * ROWS * COLS);
 }
 
@@ -220,8 +219,22 @@ void	img_init(t_game *game)
 	game->img.data = (int *)mlx_get_data_addr(game->img.img, &game->img.bpp, &game->img.size_l, &game->img.endian);
 }
 
+void    clear_condition(t_game *game)
+{
+    static int cnt;
+
+    if (game->map[game->rot_x][game->rot_y] == 67)
+    {
+        game->map[game->rot_x][game->rot_y] = 0;
+        cnt++;
+        printf("획득한 C의 개수: %d \n", cnt);
+    }
+    if (cnt == 2 && game->map[game->rot_x][game->rot_y] == 69)
+        exit(0);
+}
 int		main_loop(t_game *game)
 {
+    clear_condition(game);
 	draw_rectangles(game);
 	draw_lines(game);
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
