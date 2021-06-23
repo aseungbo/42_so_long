@@ -13,18 +13,19 @@
 # define KEY_S			1
 # define KEY_D			2
 
-# define TILE_SIZE 50
+# define TILE_SIZE 32
 # define ROWS 11
 # define COLS 15
 # define WIDTH COLS * TILE_SIZE
 # define HEIGHT ROWS * TILE_SIZE
-
+# define COUNT ROWS * COLS
 # define TO_COORD(X, Y) ((int)floor(Y) * WIDTH + (int)floor(X))
 
 typedef struct	s_img
 {
 	void	*img;
-    void    *img_file;
+	int		width;
+	int 	height;
 	int		*data;
 
 	int		size_l;
@@ -36,85 +37,79 @@ typedef struct	s_game
 {
 	void	*mlx;
 	void	*win;
-	t_img	img;
+	t_img	tiles;
     int     rot_x;
     int     rot_y;
 
 	int		map[ROWS][COLS];
 }				t_game;
 
-//Draw the line by DDA algorithm
-// void	draw_line(t_game *game, double x1, double y1, double x2, double y2)
+// void	draw_rectangle(t_game *game, int x, int y, int color)
 // {
-// 	double	deltaX;
-// 	double	deltaY;
-// 	double	step;
+// 	int i;
+// 	int j;
+//     int	img_width;
+// 	int img_height;
 
-// 	deltaX = x2 - x1;
-// 	deltaY = y2 - y1;
-// 	step = (fabs(deltaX) > fabs(deltaY)) ? fabs(deltaX) : fabs(deltaY);
-// 	deltaX /= step;
-// 	deltaY /= step;
-// 	while (fabs(x2 - x1) > 0.01 || fabs(y2 - y1) > 0.01)
+// 	x *= TILE_SIZE;
+// 	y *= TILE_SIZE;
+// 	i = 0;
+// 	while (i < TILE_SIZE)
 // 	{
-// 		game->img.data[TO_COORD(x1, y1)] = 0xb3b3b3;
-// 		x1 += deltaX;
-// 		y1 += deltaY;
+// 		j = 0;
+// 		while (j < TILE_SIZE)
+// 		{
+// 			game->img.data[(y + i) * WIDTH + x + j] = color;
+// 			j++;
+// 		}
+// 		i++;
 // 	}
 // }
 
-// void 	draw_lines(t_game *game)
+// void	draw_rectangles(t_game *game)
 // {
 // 	int		i;
 // 	int		j;
+//     int		img_width;
+// 	int 	img_height;
 
 // 	i = 0;
-// 	while (i < COLS)
+// 	while (i < ROWS)
 // 	{
-// 		draw_line(game, i * TILE_SIZE, 0, i * TILE_SIZE, HEIGHT);
+// 		j = 0;
+// 		while (j < COLS)
+// 		{
+//             // free space
+//             draw_rectangle(game, j, i, 0x000000);
+
+//             // wall, Add img
+// 			if (game->map[i][j] == 1)
+//             {
+// 				draw_rectangle(game, j, i, 0xFFFFFF);
+//                 // draw_img(game, j, i);
+//             }
+//             // C, instead of img
+//             else if (game->map[i][j] == 69)
+//                 draw_rectangle(game, j, i, 0xFFFF00);
+//             // E, instead of img
+//             else if (game->map[i][j] == 67)
+//                 draw_rectangle(game, j, i, 0x0000FF);
+//             // player, instead of img
+//             else if (game->rot_x == i && game->rot_y == j)
+//                 draw_rectangle(game, j, i, 0x7FFF00);
+//             // Bonus: enemy patrols, instead of img
+//             else if (game->map[i][j] == 75)
+//                 draw_rectangle(game, j, i, 0xFF0000);
+// 			j++;
+// 		}
 // 		i++;
 // 	}
-// 	draw_line(game, COLS * TILE_SIZE - 1, 0, COLS * TILE_SIZE - 1, HEIGHT);
-// 	j = 0;
-// 	while (j < ROWS)
-// 	{
-// 		draw_line(game, 0, j * TILE_SIZE, WIDTH, j * TILE_SIZE);
-// 		j++;
-// 	}
-// 	draw_line(game, 0, ROWS * TILE_SIZE - 1, WIDTH, ROWS * TILE_SIZE - 1);
 // }
 
-void	draw_rectangle(t_game *game, int x, int y, int color)
-{
-	int i;
-	int j;
-    int	img_width;
-	int img_height;
-
-    // game->img.img = mlx_xpm_file_to_image(game->mlx, "./wall_e.xpm", &img_width, &img_height);
-    // game->img.data = (int *)mlx_get_data_addr(game->img.img, &game->img.bpp, &game->img.size_l, &game->img.endian);
-	x *= TILE_SIZE;
-	y *= TILE_SIZE;
-	i = 0;
-	while (i < TILE_SIZE)
-	{
-		j = 0;
-		while (j < TILE_SIZE)
-		{
-			game->img.data[(y + i) * WIDTH + x + j] = color;
-			j++;
-		}
-		i++;
-	}
-    // mlx_put_image_to_window(game->mlx, game->win, game->img.img_file, x, y);
-}
-
-void	draw_rectangles(t_game *game)
+void	draw_textures(t_game *game)
 {
 	int		i;
 	int		j;
-    int		img_width;
-	int 	img_height;
 
 	i = 0;
 	while (i < ROWS)
@@ -122,27 +117,46 @@ void	draw_rectangles(t_game *game)
 		j = 0;
 		while (j < COLS)
 		{
-            // free space
-            draw_rectangle(game, j, i, 0x000000);
-
-            // wall, Add img
+            // // free space
+			game->tiles.img = mlx_xpm_file_to_image(game->mlx, "./textures/floor.xpm", &game->tiles.width, &game->tiles.height);
+			mlx_put_image_to_window(game->mlx, game->win, game->tiles.img,
+					j * game->tiles.width, i * game->tiles.height);
+            // // wall, Add img
 			if (game->map[i][j] == 1)
             {
-				draw_rectangle(game, j, i, 0xFFFFFF);
+				game->tiles.img = mlx_xpm_file_to_image(game->mlx, "./textures/wall.xpm", &game->tiles.width, &game->tiles.height);
+				mlx_put_image_to_window(game->mlx, game->win, game->tiles.img,
+					j * game->tiles.width, i * game->tiles.height);
                 // draw_img(game, j, i);
             }
-            // C, instead of img
+            // // C, instead of img
             else if (game->map[i][j] == 69)
-                draw_rectangle(game, j, i, 0xFFFF00);
-            // E, instead of img
+			{
+                game->tiles.img = mlx_xpm_file_to_image(game->mlx, "./textures/collectible.xpm", &game->tiles.width, &game->tiles.height);
+				mlx_put_image_to_window(game->mlx, game->win, game->tiles.img,
+					j * game->tiles.width, i * game->tiles.height);
+            }
+			// // E, instead of img
             else if (game->map[i][j] == 67)
-                draw_rectangle(game, j, i, 0x0000FF);
-            // player, instead of img
+			{
+				game->tiles.img = mlx_xpm_file_to_image(game->mlx, "./textures/exit.xpm", &game->tiles.width, &game->tiles.height);
+				mlx_put_image_to_window(game->mlx, game->win, game->tiles.img,
+					j * game->tiles.width, i * game->tiles.height);
+            }
+			// player, instead of img
             else if (game->rot_x == i && game->rot_y == j)
-                draw_rectangle(game, j, i, 0x7FFF00);
+            {
+				game->tiles.img = mlx_xpm_file_to_image(game->mlx, "./textures/player.xpm", &game->tiles.width, &game->tiles.height);
+				mlx_put_image_to_window(game->mlx, game->win, game->tiles.img,
+					j * game->tiles.width, i * game->tiles.height);
+			}
             // Bonus: enemy patrols, instead of img
             else if (game->map[i][j] == 75)
-                draw_rectangle(game, j, i, 0xFF0000);
+			{
+				game->tiles.img = mlx_xpm_file_to_image(game->mlx, "./textures/fail.xpm", &game->tiles.width, &game->tiles.height);
+				mlx_put_image_to_window(game->mlx, game->win, game->tiles.img,
+					j * game->tiles.width, i * game->tiles.height);
+			}
 			j++;
 		}
 		i++;
@@ -185,7 +199,7 @@ int		deal_key(int key_code, t_game *game)
         if (game->map[game->rot_x][game->rot_y + 1] != 1)
 		{
             game->rot_y++;
-            cnt++;
+            // cnt++;
             // printf("x: %d\n", game->rot_x);
         }
     }
@@ -195,9 +209,9 @@ int		deal_key(int key_code, t_game *game)
     return (0);
 }
 
-int 	close(t_game *game)
+int	process_close(void)
 {
-		exit(0);
+	exit(0);
 }
 
 void	game_init(t_game *game)
@@ -226,12 +240,6 @@ void	window_init(t_game *game)
 	game->win = mlx_new_window(game->mlx, WIDTH, HEIGHT, "./so_long");
 }
 
-void	img_init(t_game *game)
-{
-	game->img.img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
-	game->img.data = (int *)mlx_get_data_addr(game->img.img, &game->img.bpp, &game->img.size_l, &game->img.endian);
-}
-
 void    play_condition(t_game *game)
 {
     static int cnt;
@@ -251,9 +259,7 @@ void    play_condition(t_game *game)
 int		main_loop(t_game *game)
 {
     play_condition(game);
-	draw_rectangles(game);
-	// draw_lines(game);
-	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
+	draw_textures(game);
 	return (0);
 }
 
@@ -263,9 +269,8 @@ int		main(void)
 
 	game_init(&game);
 	window_init(&game);
-	img_init(&game);
 	mlx_hook(game.win, X_EVENT_KEY_PRESS, 0, &deal_key, &game);
-	mlx_hook(game.win, X_EVENT_KEY_EXIT, 0, &close, &game);
+	mlx_hook(game.win, X_EVENT_KEY_EXIT, 0, &process_close, &game);
 	mlx_loop_hook(game.mlx, &main_loop, &game);
 	mlx_loop(game.mlx);
 }
