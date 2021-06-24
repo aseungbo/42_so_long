@@ -18,7 +18,6 @@
 # define COLS 15
 # define WIDTH COLS * TILE_SIZE
 # define HEIGHT ROWS * TILE_SIZE
-# define TO_COORD(X, Y) ((int)floor(Y) * WIDTH + (int)floor(X))
 
 typedef struct	s_tile_info
 {
