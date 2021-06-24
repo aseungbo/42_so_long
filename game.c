@@ -55,67 +55,6 @@ typedef struct	s_game
 	t_tile_info	tile_info;
     t_play_info play_info;
 }				t_game;
-// void	draw_rectangle(t_game *game, int x, int y, int color)
-// {
-// 	int i;
-// 	int j;
-//     int	img_width;
-// 	int img_height;
-
-// 	x *= TILE_SIZE;
-// 	y *= TILE_SIZE;
-// 	i = 0;
-// 	while (i < TILE_SIZE)
-// 	{
-// 		j = 0;
-// 		while (j < TILE_SIZE)
-// 		{
-// 			game->img.data[(y + i) * WIDTH + x + j] = color;
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// }
-
-// void	draw_rectangles(t_game *game)
-// {
-// 	int		i;
-// 	int		j;
-//     int		img_width;
-// 	int 	img_height;
-
-// 	i = 0;
-// 	while (i < ROWS)
-// 	{
-// 		j = 0;
-// 		while (j < COLS)
-// 		{
-//             // free space
-//             draw_rectangle(game, j, i, 0x000000);
-
-//             // wall, Add img
-// 			if (game->map[i][j] == 1)
-//             {
-// 				draw_rectangle(game, j, i, 0xFFFFFF);
-//                 // draw_img(game, j, i);
-//             }
-//             // C, instead of img
-//             else if (game->map[i][j] == 69)
-//                 draw_rectangle(game, j, i, 0xFFFF00);
-//             // E, instead of img
-//             else if (game->map[i][j] == 67)
-//                 draw_rectangle(game, j, i, 0x0000FF);
-//             // player, instead of img
-//             else if (game->rot_x == i && game->rot_y == j)
-//                 draw_rectangle(game, j, i, 0x7FFF00);
-//             // Bonus: enemy patrols, instead of img
-//             else if (game->map[i][j] == 75)
-//                 draw_rectangle(game, j, i, 0xFF0000);
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// }
 
 void	draw_textures(t_game *game)
 {
@@ -128,23 +67,23 @@ void	draw_textures(t_game *game)
 		j = 0;
 		while (j < COLS)
 		{
-            // // free space
+            // free space
 			mlx_put_image_to_window(game->win_info.mlx, game->win_info.win, game->tiles.floor,
 					j * game->tile_info.width, i * game->tile_info.height);
-            // // wall, Add img
+            // wall, Add img
 			if (game->play_info.map[i][j] == 1)
             {
 				mlx_put_image_to_window(game->win_info.mlx, game->win_info.win, game->tiles.wall,
 					j * game->tile_info.width, i * game->tile_info.height);
                 // draw_img(game, j, i);
             }
-            // // C, instead of img
+            // C, instead of img
             else if (game->play_info.map[i][j] == 'C')
 			{
 				mlx_put_image_to_window(game->win_info.mlx, game->win_info.win, game->tiles.collectible,
 					j * game->tile_info.width, i * game->tile_info.height);
             }
-			// // E, instead of img
+			// E, instead of img
             else if (game->play_info.map[i][j] == 'E')
 			{
 				mlx_put_image_to_window(game->win_info.mlx, game->win_info.win, game->tiles.exit,
@@ -156,13 +95,6 @@ void	draw_textures(t_game *game)
 				mlx_put_image_to_window(game->win_info.mlx, game->win_info.win, game->tiles.player,
 					j * game->tile_info.width, i * game->tile_info.height);
 			}
-            // // Bonus: enemy patrols, instead of img
-            // else if (game->map[i][j] == 75)
-			// {
-			// 	game->tiles.img = mlx_xpm_file_to_image(game->mlx, "./textures/fail.xpm", &game->tiles.width, &game->tiles.height);
-			// 	mlx_put_image_to_window(game->mlx, game->win, game->tiles.img,
-			// 		j * game->tiles.width, i * game->tiles.height);
-			// }
 			j++;
 		}
 		i++;
@@ -173,40 +105,36 @@ int		deal_key(int key_code, t_game *game)
 {
     static int cnt;
 
-	if (key_code == KEY_W) //Action when W key pressed
+	if (key_code == KEY_W) // Action when W key pressed
     {
         if (game->play_info.map[game->play_info.rot_x - 1][game->play_info.rot_y] != 1)
         {
 		    game->play_info.rot_x--;
             cnt++;
-            // printf("y: %d\n", game->rot_y);
         }
     }
-    else if (key_code == KEY_S) //Action when S key pressed
+    else if (key_code == KEY_S) // Action when S key pressed
 	{
         if (game->play_info.map[game->play_info.rot_x + 1][game->play_info.rot_y] != 1)
 		{
             game->play_info.rot_x++;
             cnt++;
-            // printf("y: %d\n", game->rot_y);
         }
     }
-    else if (key_code == KEY_A) //Action when A key pressed
+    else if (key_code == KEY_A) // Action when A key pressed
 	{
         if (game->play_info.map[game->play_info.rot_x][game->play_info.rot_y - 1] != 1)
         {
             game->play_info.rot_y--;
-            cnt++;
-            // printf("x: %d\n", game->rot_x);
+            cnt++
         }
     }
-    else if (key_code == KEY_D) //Action when D key pressed
+    else if (key_code == KEY_D) // Action when D key pressed
 	{
         if (game->play_info.map[game->play_info.rot_x][game->play_info.rot_y + 1] != 1)
 		{
             game->play_info.rot_y++;
             cnt++;
-            // printf("x: %d\n", game->rot_x);
         }
     }
 	else if (key_code == KEY_ESC)
@@ -265,9 +193,6 @@ void    play_condition(t_game *game)
         cnt++;
         printf("획득한 C의 개수: %d \n", cnt);
     }
-    // Bonus : enemy patrols
-    // else if (game->map[game->rot_x][game->rot_y] == 75)
-    //     exit(0);
     else if (cnt == 2 && game->play_info.map[game->play_info.rot_x][game->play_info.rot_y] == 'E')
         exit(0);
 }
