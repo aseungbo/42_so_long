@@ -101,9 +101,9 @@ void    play_condition(t_game *game)
     {
         game->map_info.map[game->play_info.pos_y][game->play_info.pos_x] = '0';
         cnt++;
-        printf("획득한 C의 개수: %d \n", cnt);
+        printf("the current number of coin: %d :)\n", cnt);
     }
-    else if (cnt == game->play_info.coin_num && game->map_info.map[game->play_info.pos_y][game->play_info.pos_x] == 'E')
+    if (cnt == game->play_info.coin_num && game->map_info.map[game->play_info.pos_y][game->play_info.pos_x] == 'E')
         exit(0);
 }
 
@@ -157,10 +157,10 @@ int 	map_parse(t_game *game, int fd)
 		i++;
 	}
 
-	for (int k = 0; k < row; k++)
-	{
-		printf("%d번째 줄: %s\n", k + 1, game->map_info.map[k]);
-	}
+	// for (int k = 0; k < row; k++)
+	// {
+	// 	printf("%d번째 줄: %s\n", k + 1, game->map_info.map[k]);
+	// }
 
 	for (int i = 0; i < row; i++)
 	{
@@ -175,7 +175,7 @@ int 	map_parse(t_game *game, int fd)
 				game->play_info.coin_num++;
 		}
 	}
-	printf("현재 플레이어 위치: (%d, %d)\n", game->play_info.pos_x, game->play_info.pos_y);
+	// printf("현재 플레이어 위치: (%d, %d)\n", game->play_info.pos_x, game->play_info.pos_y);
 
 	return (1);
 }
