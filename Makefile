@@ -15,6 +15,7 @@ SRC		= 	src/so_long.c \
 			src/get_next_line_utils.c \
 			src/utils_1.c \
 			src/utils_2.c \
+			src/utils_3.c \
 
 OBJ = $(SRC:.c=.o)
 

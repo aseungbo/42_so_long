@@ -4,12 +4,18 @@
 void			play_condition(t_game *game)
 {
 	static int	cnt;
+	char		*dum;
 
 	if (game->map_info.map[game->play_info.pos_y][game->play_info.pos_x] == 'C')
 	{
 		game->map_info.map[game->play_info.pos_y][game->play_info.pos_x] = '0';
 		cnt++;
-		printf("the current number of coin: %d :)\n", cnt);
+		if(!(dum = ft_itoa(cnt)))
+			exit (0);
+		ft_putstr_fd("획득한 코인의 수: ", 1);
+		ft_putstr_fd(dum, 1);
+		ft_putchar_fd('\n', 1);
+		free(dum);
 	}
 	if (cnt == game->play_info.coin_num &&
 		game->map_info.map[game->play_info.pos_y][game->play_info.pos_x] == 'E')
@@ -19,6 +25,7 @@ void			play_condition(t_game *game)
 void			move_cnt(int key_code, t_game *game)
 {
 	static int	cnt;
+	char		*dum;
 
 	if (key_code == KEY_W)
 		game->play_info.pos_y--;
@@ -29,7 +36,12 @@ void			move_cnt(int key_code, t_game *game)
 	else if (key_code == KEY_D)
 		game->play_info.pos_x++;
 	cnt++;
-	printf("the current number of movements: %d\n", cnt);
+	if(!(dum = ft_itoa(cnt)))
+			exit (0);
+	ft_putstr_fd("움직인 횟수: ", 1);
+	ft_putstr_fd(dum, 1);
+	ft_putchar_fd('\n', 1);
+	free(dum);
 }
 
 int				deal_key(int key_code, t_game *game)

@@ -2,14 +2,10 @@
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
+# include "../mlx/mlx.h"
 # include <stdlib.h>
 # include <unistd.h>
-# include "../mlx/mlx.h"
 # include <fcntl.h>
-
-// 밑에 지우고 제출
-# include <stdio.h>
-# include <string.h>
 
 # define OPEN_MAX 256
 # define BUFFER_SIZE 256
@@ -88,4 +84,7 @@ void			draw_textures(t_game *game);
 int				process_close(void);
 int				deal_key(int key_code, t_game *game);
 void			move_cnt(int key_code, t_game *game);
+void			play_condition(t_game *game);
+int				ft_atoi(const char *nptr);
+char			*ft_itoa(int n);
 #endif
