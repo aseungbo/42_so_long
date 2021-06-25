@@ -7,7 +7,7 @@
 #include <fcntl.h>
 // #include <math.h>
 #include <string.h> // only for testing
-#include "./mlx/mlx.h"
+#include "../mlx/mlx.h"
 
 // gnl - macro
 # define OPEN_MAX 256

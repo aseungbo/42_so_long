@@ -6,11 +6,11 @@ MLX 	= -L./mlx -lmlx -framework OpenGL -framework AppKit
 
 RM		= rm -rf
 
-SRC		= 	so_long.c \
-			get_next_line.c \
-			get_next_line_utils.c \
-			utils_1.c \
-			utils_2.c
+SRC		= 	src/so_long.c \
+			src/get_next_line.c \
+			src/get_next_line_utils.c \
+			src/utils_1.c \
+			src/utils_2.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -20,7 +20,7 @@ $(TARGET): $(OBJ)
 	$(CC) $(MLX) $(OBJ) -I so_long.h -o $(TARGET)
 
 clean :
-		$(RM) *.o
+		$(RM) ./src/*.o
 
 fclean : clean
 		$(RM) $(TARGET)
