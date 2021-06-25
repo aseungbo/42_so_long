@@ -1,3 +1,4 @@
+// 헤더 추가
 #include "so_long.h"
 
 void				ft_putchar_fd(char c, int fd)
@@ -18,4 +19,3 @@ void				ft_putstr_fd(char *s, int fd)
 		idx++;
 	}
 }
-

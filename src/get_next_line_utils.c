@@ -1,8 +1,9 @@
+// 헤더 추가
 #include "so_long.h"
 
-size_t		ft_gnl_strlen(const char *s)
+size_t					ft_gnl_strlen(const char *s)
 {
-	int i;
+	int					i;
 
 	i = 0;
 	if (!s)
@@ -12,12 +13,12 @@ size_t		ft_gnl_strlen(const char *s)
 	return (i);
 }
 
-char		*ft_gnl_strjoin(char const *backup, char const *buff)
+char					*ft_gnl_strjoin(char const *backup, char const *buff)
 {
-	char	*rst;
-	size_t	backup_len;
-	size_t	buff_len;
-	size_t	all_len;
+	char				*rst;
+	size_t				backup_len;
+	size_t				buff_len;
+	size_t				all_len;
 
 	if (!backup && !buff)
 		return (0);
@@ -34,10 +35,10 @@ char		*ft_gnl_strjoin(char const *backup, char const *buff)
 	return (rst);
 }
 
-void *ft_gnl_memcpy(void *dest, const void *src, size_t n)
+void					*ft_gnl_memcpy(void *dest, const void *src, size_t n)
 {
-	unsigned char *d;
-	const unsigned char *s;
+	unsigned char		*d;
+	const unsigned char	*s;
 
 	d = (unsigned char*)dest;
 	s = (unsigned char*)src;
