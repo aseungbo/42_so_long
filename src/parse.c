@@ -1,7 +1,7 @@
 // 헤더 추가
 #include "so_long.h"
 
-int 	map_parse(t_game *game, int fd)
+char	*map_read_and_init(t_game *game, int fd)
 {
 	char	*line;
 	int		row;
@@ -12,46 +12,57 @@ int 	map_parse(t_game *game, int fd)
 	string = "";
 	while (get_next_line(fd, &line))
 	{
-		// printf("%s\n", line);
 		string = ft_strjoin(string, line);
 		row++;
 	}
-	// printf("%s\n", line);
 	string = ft_strjoin(string, line);
 	col = ft_strlen(line);
-	// printf("행의 개수: %d\n", row);
-	// printf("열의 개수: %d\n", col);
-	// printf("합쳐진 문자: %s\n", string);
 
 	game->map_info.row = row;
 	game->map_info.col = col;
 	game->win_info.width = col * 64;
 	game->win_info.height = row * 64;
-	game->map_info.map = (char **)malloc(sizeof(char *) * row);
 	game->play_info.coin_num = 0;
+	game->play_info.exit_num = 0;
+	game->play_info.pos_x = -1;
+	game->play_info.pos_y = -1;
 
-	for (int i = 0; i < row; i++)
-	{
-		game->map_info.map[i] = malloc(sizeof(char) * (col + 1));
-	}
+	return (string);
+}
 
-	int i = 0;
+void	malloc_map_info(t_game *game, char *map_string)
+{
+	int i;
 	int start = 0;
-	while (i < row)
+
+	i = 0;
+	game->map_info.map = (char **)malloc(sizeof(char *) * game->map_info.row);
+
+	while (i < game->map_info.row)
 	{
-		game->map_info.map[i] = ft_substr(string, start, col);
-		start += col;
+		game->map_info.map[i] = malloc(sizeof(char) * (game->map_info.col + 1));
 		i++;
 	}
 
-	// for (int k = 0; k < row; k++)
-	// {
-	// 	printf("%d번째 줄: %s\n", k + 1, game->map_info.map[k]);
-	// }
-
-	for (int i = 0; i < row; i++)
+	i = 0;
+	while (i < game->map_info.row)
 	{
-		for (int j = 0; j < col; j++)
+		game->map_info.map[i] = ft_substr(map_string, start, game->map_info.col);
+		start += game->map_info.col;
+		i++;
+	}
+}
+
+void	map_elem_counting(t_game *game)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (i < game->map_info.row)
+	{
+		j = 0;
+		while (j < game->map_info.col)
 		{
 			if (game->map_info.map[i][j] == 'P')
 			{
@@ -60,21 +71,117 @@ int 	map_parse(t_game *game, int fd)
 			}
 			else if (game->map_info.map[i][j] == 'C')
 				game->play_info.coin_num++;
+			else if (game->map_info.map[i][j] == 'E')
+				game->play_info.exit_num++;
+			j++;
 		}
+		i++;
 	}
-	// printf("현재 플레이어 위치: (%d, %d)\n", game->play_info.pos_x, game->play_info.pos_y);
+}
 
+
+int		some_elem_is_not_missing(t_game *game)
+{
+	if (game->play_info.exit_num < 1)
+		return (0);
+	if (game->play_info.coin_num < 1)
+		return (0);
+	if (game->play_info.pos_x < 0 || game->play_info.pos_y < 0)
+		return (0);
+	return (1);
+}
+
+
+int		all_boundary_is_not_wall(t_game *game)
+{
+	int i;
+
+	i = 0;
+	while (i < game->map_info.col)
+	{
+		if (game->map_info.map[0][i] != '1')
+			return (0);
+		if (game->map_info.map[game->map_info.row - 1][i] != '1')
+			return (0);
+		i++;
+	}
+	i = 0;
+	while (i < game->map_info.row)
+	{
+		if (game->map_info.map[i][0] != '1')
+			return (0);
+		if (game->map_info.map[game->map_info.col - 1][0] != '1')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+
+void	free_all_thing(t_game *game)
+{
+	int i;
+
+	i = 0;
+	if (game->map_info.map)
+	{
+		while (i < game->map_info.row)
+			free(game->map_info.map[i++]);
+		free(game->map_info.map);
+	}
+}
+
+void	print_error(t_game *game, char *e_msg)
+{
+	write(1, "Error\n", 7);
+	if (e_msg)
+		write(2, e_msg, ft_strlen(e_msg));
+	free_all_thing(game);
+	exit(EXIT_FAILURE);
+}
+
+int		extension_is_ber(char *file_name)
+{
+	int ptr;
+	
+	ptr = ft_strlen(file_name) - 1;
+	if (file_name[ptr] != 'r')
+		return (0);
+	if (file_name[ptr - 1] != 'e')
+		return (0);
+	if (file_name[ptr - 2] != 'b')
+		return (0);
+	if (file_name[ptr - 3] != '.')
+		return (0);
+	return (1);
+}
+
+int 	map_parse(t_game *game, int fd)
+{
+	char *map_string;
+
+	map_string = map_read_and_init(game, fd);
+
+	malloc_map_info(game, map_string);
+
+	map_elem_counting(game);
+
+	if (!all_boundary_is_not_wall(game))
+		return (0);
+	if (!some_elem_is_not_missing(game))
+		return (0);
 	return (1);
 }
 
 void	check_arguments(t_game *game, int argc, char **argv)
 {
 	int		fd;
-	char	**tmp;
-	int		tmp1;
 
-	tmp1 = argc;
-	tmp = argv;
+	if (argc != 2)
+		print_error(game, "[ERROR]: need one argument\n");
+	else if (!extension_is_ber(argv[1]))
+		print_error(game, "[ERROR]: file extension is not .ber\n");
 	fd = open(argv[1], O_RDONLY);
-	map_parse(game, fd);	
+	if (!map_parse(game, fd))
+		print_error(game, "[ERROR]: invalid map\n");
 }

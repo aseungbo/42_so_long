@@ -11,8 +11,6 @@ int				main(int argc, char **argv)
 {
 	t_game		game;
 
-	if (argc != 2)
-		exit(1);
 	check_arguments(&game, argc, argv);
 	window_init(&game);
 	tile_init(&game);

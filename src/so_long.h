@@ -47,6 +47,7 @@ typedef struct	s_play_info
 	int			pos_x;
 	int			pos_y;
 	int			coin_num;
+	int			exit_num;
 }				t_play_info;
 
 typedef struct	s_map_info
@@ -87,4 +88,16 @@ void			move_cnt(int key_code, t_game *game);
 void			play_condition(t_game *game);
 int				ft_atoi(const char *nptr);
 char			*ft_itoa(int n);
+
+// parse.c
+int 			map_parse(t_game *game, int fd);
+void			malloc_map_info(t_game *game, char *map_string);
+void			map_elem_counting(t_game *game);
+int				some_elem_is_not_missing(t_game *game);
+int				all_boundary_not_is_wall(t_game *game);
+void			free_all_thing(t_game *game);
+void			print_error(t_game *game, char *e_msg);
+int				extension_is_ber(char *file_name);
+void			check_arguments(t_game *game, int argc, char **argv);
+
 #endif
