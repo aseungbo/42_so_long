@@ -97,4 +97,7 @@ char    	*ft_strdup(const char *s);
 char    	*ft_strjoin(char const *s1, char const *s2);
 char    	*ft_substr(char const *s, unsigned int start, size_t len);
 
+// utils_2.c
+void				ft_putchar_fd(char c, int fd);
+void				ft_putstr_fd(char *s, int fd);
 #endif

@@ -2,14 +2,15 @@ TARGET  = so_long
 
 CC		= gcc -Wall -Wextra -Werror
 
-MLX 	= -L../mlx -lmlx -framework OpenGL -framework AppKit
+MLX 	= -L./mlx -lmlx -framework OpenGL -framework AppKit
 
 RM		= rm -rf
 
 SRC		= 	so_long.c \
 			get_next_line.c \
 			get_next_line_utils.c \
-			utils_1.c 
+			utils_1.c \
+			utils_2.c
 
 OBJ = $(SRC:.c=.o)
 
