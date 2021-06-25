@@ -63,7 +63,7 @@ char				*ft_itoa(int n)
 	return (positive_num(n, n_cnt));
 }
 
-int			ft_isspace(char c)
+int					ft_isspace(char c)
 {
 	if (c == ' ' || c == '\t' || c == '\n' || c == '\v' || \
 			c == '\r' || c == '\f')
@@ -72,11 +72,11 @@ int			ft_isspace(char c)
 		return (0);
 }
 
-int			ft_atoi(const char *nptr)
+int					ft_atoi(const char *nptr)
 {
-	long	nbr;
-	long	minus;
-	int		idx;
+	long			nbr;
+	long			minus;
+	int				idx;
 
 	nbr = 0;
 	minus = 1;
