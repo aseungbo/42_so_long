@@ -1,24 +1,8 @@
 // 헤더 추가
 #include "so_long.h"
 
-void			play_condition(t_game *game)
-{
-	static int	cnt;
-
-	if (game->map_info.map[game->play_info.pos_y][game->play_info.pos_x] == 'C')
-	{
-		game->map_info.map[game->play_info.pos_y][game->play_info.pos_x] = '0';
-		cnt++;
-		printf("the current number of coin: %d :)\n", cnt);
-	}
-	if (cnt == game->play_info.coin_num &&
-		game->map_info.map[game->play_info.pos_y][game->play_info.pos_x] == 'E')
-		exit(0);
-}
-
 int				main_loop(t_game *game)
 {
-	play_condition(game);
 	draw_textures(game);
 	return (0);
 }
