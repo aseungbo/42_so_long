@@ -182,6 +182,8 @@ void	check_arguments(t_game *game, int argc, char **argv)
 	else if (!extension_is_ber(argv[1]))
 		print_error(game, "[ERROR]: file extension is not .ber\n");
 	fd = open(argv[1], O_RDONLY);
+	if (fd < 0)
+		print_error(game, "[ERROR]: file isn't exist.\n");
 	if (!map_parse(game, fd))
 		print_error(game, "[ERROR]: invalid map\n");
 }
