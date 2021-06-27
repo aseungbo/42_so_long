@@ -94,7 +94,7 @@ int		all_boundary_is_not_wall(t_game *game)
 	{
 		if (game->map_info.map[i][0] != '1')
 			return (0);
-		if (game->map_info.map[game->map_info.col - 1][0] != '1')
+		if (game->map_info.map[i][game->map_info.col - 1] != '1')
 			return (0);
 		i++;
 	}

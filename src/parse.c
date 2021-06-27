@@ -52,6 +52,7 @@ int		map_parse(t_game *game, int fd)
 	return (1);
 }
 
+
 void	check_arguments(t_game *game, int argc, char **argv)
 {
 	int		fd;
