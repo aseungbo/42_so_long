@@ -9,6 +9,7 @@ RM		= rm -rf
 SRC		= 	src/so_long.c \
 			src/init.c \
 			src/parse.c \
+			src/parse2.c \
 			src/draw.c \
 			src/deal_key.c \
 			src/get_next_line.c \

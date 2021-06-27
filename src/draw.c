@@ -1,5 +1,3 @@
-// 헤더 추가
-// 너무 구질구질해욤
 #include "so_long.h"
 
 void	draw_textures(t_game *game)

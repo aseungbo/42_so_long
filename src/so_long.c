@@ -1,4 +1,3 @@
-// 헤더 추가
 #include "so_long.h"
 
 int				main_loop(t_game *game)

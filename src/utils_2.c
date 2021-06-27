@@ -1,4 +1,3 @@
-// 헤더 추가
 #include "so_long.h"
 
 void				ft_putchar_fd(char c, int fd)

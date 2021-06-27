@@ -1,4 +1,3 @@
-// 헤더 추가
 #include "so_long.h"
 
 int		check_newline(char *str)

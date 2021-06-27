@@ -1,4 +1,3 @@
-// 헤더 추가
 #include "so_long.h"
 
 int					num_counter(int n)

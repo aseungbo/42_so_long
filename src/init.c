@@ -1,4 +1,3 @@
-// 헤더 추가
 #include "so_long.h"
 
 void	window_init(t_game *game)
