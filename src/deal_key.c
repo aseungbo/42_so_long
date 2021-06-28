@@ -18,7 +18,15 @@ void			play_condition(t_game *game)
 	}
 	if (cnt == game->play_info.coin_num &&
 		game->map_info.map[game->play_info.pos_y][game->play_info.pos_x] == 'E')
+	{
+		mlx_destroy_window(game->win_info.mlx, game->win_info.win);
+		mlx_destroy_image(game->win_info.mlx, game->tiles.floor);
+		mlx_destroy_image(game->win_info.mlx, game->tiles.wall);
+		mlx_destroy_image(game->win_info.mlx, game->tiles.player);
+		mlx_destroy_image(game->win_info.mlx, game->tiles.exit);
+		mlx_destroy_image(game->win_info.mlx, game->tiles.collectible);
 		exit(0);
+	}
 }
 
 void			move_cnt(int key_code, t_game *game)
