@@ -90,7 +90,7 @@ char			*ft_itoa(int n);
 
 int				map_parse(t_game *game, int fd);
 void			malloc_map_info(t_game *game, char *map_string);
-void			map_elem_counting(t_game *game);
+int				map_elem_counting(t_game *game);
 int				some_elem_is_not_missing(t_game *game);
 int				all_boundary_is_not_wall(t_game *game);
 void			free_all_thing(t_game *game);

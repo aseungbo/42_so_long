@@ -50,7 +50,7 @@ void	malloc_map_info(t_game *game, char *map_string)
 	}
 }
 
-void	map_elem_counting(t_game *game)
+int		map_elem_counting(t_game *game)
 {
 	int i;
 	int j;
@@ -63,6 +63,8 @@ void	map_elem_counting(t_game *game)
 		{
 			if (game->map_info.map[i][j] == 'P')
 			{
+				if (game->play_info.pos_x > 0 && game->play_info.pos_y > 0)
+					return (1);
 				game->play_info.pos_x = j;
 				game->play_info.pos_y = i;
 			}
@@ -74,6 +76,7 @@ void	map_elem_counting(t_game *game)
 		}
 		i++;
 	}
+	return (0);
 }
 
 int		all_boundary_is_not_wall(t_game *game)
