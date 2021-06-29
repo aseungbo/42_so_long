@@ -3,22 +3,16 @@
 void			play_condition(t_game *game)
 {
 	static int	cnt;
-	char		*dum;
 
 	if (game->map_info.map[game->play_info.pos_y][game->play_info.pos_x] == 'C')
 	{
 		game->map_info.map[game->play_info.pos_y][game->play_info.pos_x] = '0';
 		cnt++;
-		if (!(dum = ft_itoa(cnt)))
-			exit(0);
-		ft_putstr_fd("획득한 코인의 수: ", 1);
-		ft_putstr_fd(dum, 1);
-		ft_putchar_fd('\n', 1);
-		free(dum);
 	}
 	if (cnt == game->play_info.coin_num &&
 		game->map_info.map[game->play_info.pos_y][game->play_info.pos_x] == 'E')
 	{
+		free_all_thing(game);
 		mlx_destroy_window(game->win_info.mlx, game->win_info.win);
 		mlx_destroy_image(game->win_info.mlx, game->tiles.floor);
 		mlx_destroy_image(game->win_info.mlx, game->tiles.wall);

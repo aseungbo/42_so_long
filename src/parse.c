@@ -43,7 +43,8 @@ int		map_parse(t_game *game, int fd)
 	char *map_string;
 
 	map_string = map_read_and_init(game, fd);
-	malloc_map_info(game, map_string);
+	if (!malloc_map_info(game, map_string))
+		return (0);
 	if (map_elem_counting(game))
 		return (0);
 	if (!all_boundary_is_not_wall(game))

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse2.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sajeon <sajeon@42seoul.kr>                 +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/06/29 17:38:26 by sajeon            #+#    #+#             */
+/*   Updated: 2021/06/29 17:38:30 by sajeon           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "so_long.h"
 
 char	*map_read_and_init(t_game *game, int fd)
@@ -27,17 +39,20 @@ char	*map_read_and_init(t_game *game, int fd)
 	return (string);
 }
 
-void	malloc_map_info(t_game *game, char *map_string)
+int		malloc_map_info(t_game *game, char *map_string)
 {
 	int i;
 	int j;
 
-	i = 0;
 	game->map_info.map = (char **)malloc(sizeof(char *) * game->map_info.row);
-	while (i < game->map_info.row)
+	if (!(game->map_info.map))
+		return (0);
+	i = -1;
+	while (++i < game->map_info.row)
 	{
 		game->map_info.map[i] = malloc(sizeof(char) * (game->map_info.col + 1));
-		i++;
+		if (!(game->map_info.map[i]))
+			return (0);
 	}
 	i = 0;
 	while (i < game->map_info.row)
@@ -50,6 +65,7 @@ void	malloc_map_info(t_game *game, char *map_string)
 		}
 		i++;
 	}
+	return (1);
 }
 
 int		map_elem_counting(t_game *game)
