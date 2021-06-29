@@ -50,6 +50,7 @@ int		map_parse(t_game *game, int fd)
 		return (0);
 	if (!some_elem_is_not_missing(game))
 		return (0);
+	free(map_string);
 	return (1);
 }
 

@@ -8,7 +8,7 @@ char	*map_read_and_init(t_game *game, int fd)
 	char	*string;
 
 	row = 1;
-	string = "";
+	string = ft_strdup("");
 	while (get_next_line(fd, &line))
 	{
 		string = ft_strjoin(string, line);
@@ -30,7 +30,7 @@ char	*map_read_and_init(t_game *game, int fd)
 void	malloc_map_info(t_game *game, char *map_string)
 {
 	int i;
-	int start;
+	int j;
 
 	i = 0;
 	game->map_info.map = (char **)malloc(sizeof(char *) * game->map_info.row);
@@ -40,12 +40,14 @@ void	malloc_map_info(t_game *game, char *map_string)
 		i++;
 	}
 	i = 0;
-	start = 0;
 	while (i < game->map_info.row)
 	{
-		game->map_info.map[i] = ft_substr(map_string, start,
-			game->map_info.col);
-		start += game->map_info.col;
+		j = 0;
+		while (j < game->map_info.col)
+		{
+			game->map_info.map[i][j] = map_string[i * game->map_info.col + j];
+			j++;
+		}
 		i++;
 	}
 }
