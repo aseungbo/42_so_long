@@ -2,8 +2,9 @@ TARGET  = so_long
 
 CC		= gcc -Wall -Wextra -Werror
 
-MLX 	= -L./mlx -lmlx -framework OpenGL -framework AppKit
-
+MLX_PATH = ./mlx/
+MLX	     = $(MLX_PATH)libmlx.a
+MLX		+= -lm -Imlx -framework OpenGL -framework AppKit
 RM		= rm -rf
 
 SRC		= 	src/so_long.c \
@@ -23,9 +24,11 @@ OBJ = $(SRC:.c=.o)
 all : $(TARGET)
 
 $(TARGET): $(OBJ)
+	make -C ./mlx
 	$(CC) $(MLX) $(OBJ) -I so_long.h -o $(TARGET)
 
 clean :
+		make clean -C ./mlx
 		$(RM) ./src/*.o
 
 fclean : clean
